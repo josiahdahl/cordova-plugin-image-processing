@@ -1,6 +1,7 @@
 # Ionic / Cordova Image Processing #
 
 Authors: Bruno Oliveira, Marcus Oliveira
+Additional Implementation by Igor Tomych - https://github.com/IgorTomych
 
 ## Adding the Plugin ##
 
@@ -84,3 +85,8 @@ At the moment the plugin is only avaible on the android and ios platform.
       }, function(fail) {
         // failed: 
       }, options);
+
+
+## Todo
+-[ ] Check documentation to ensure it is working correctly
+-[ ] Publish Ionic package(?)
