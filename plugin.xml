@@ -2,13 +2,13 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
     xmlns:android="http://schemas.android.com/apk/res/android"
     id="cordova-plugin-image-processing"
-    version="0.0.1">
+    version="0.0.2">
     <name>Image Processing</name>
     <description>Cordova Image Processing Plugin</description>
     <license>Apache 2.0</license>
     <keywords>cordova,image,vision,processing</keywords>
-    <repo>https://github.com/RealBrubru/cordova-plugin-image-processing.git</repo>
-    <issue>https://github.com/RealBrubru/cordova-plugin-image-processing/issues</issue>
+    <repo>https://github.com/josiahdahl/cordova-plugin-image-processing.git</repo>
+    <issue>https://github.com/josiahdahl/cordova-plugin-image-processing/issues</issue>
 
     <js-module src="www/ImageProcessing.js" name="ImageProcessing">
         <clobbers target="ImageProcessing" />
