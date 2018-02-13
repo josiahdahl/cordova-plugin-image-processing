@@ -1,0 +1,19 @@
+{
+  "name": "cordova-plugin-image-processing",
+  "version": "0.0.2",
+  "description": "Simple image processing for Cordova/Ionic",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com:josiahdahl/cordova-plugin-image-processing.git"
+  },
+  "author": "Josiah Dahl <josiah.dahl@gmail.com>",
+  "license": "Apache",
+  "cordova": {
+    "id": "com.josiahdahl.cordova-image-processing",
+    "platforms": [
+      "android",
+      "ios"
+    ]
+  }
+}
