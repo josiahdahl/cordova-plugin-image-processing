@@ -14,9 +14,14 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import android.net.Uri;
+import android.provider.MediaStore;
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.os.Environment;
+
 
 public class ImageProcessing extends CordovaPlugin {
 
@@ -63,7 +68,7 @@ public class ImageProcessing extends CordovaPlugin {
 //        folder.mkdirs();
 //      }
 
-        File f = new File(folder, destinationUri);
+        File f = new File(destinationUri);
 
         Log.d(LOG_TAG, f.getAbsolutePath());
 
@@ -83,90 +88,99 @@ public class ImageProcessing extends CordovaPlugin {
 
         this.callbackContext = callbackContext;
 
-        switch (action) {
-            case "resize":
-                final String sourceUri = (String) args.get(0);
-                final String destinationUri = (String) args.get(1);
-                final int newWidth = args.getInt(2);
-                final int newHeight = args.getInt(3);
-                final boolean keepScale = args.getBoolean(4);
+        if (action.equals("resize")) {
+            final String sourceUri = (String) args.get(0);
+            final String destinationUri = (String) args.get(1);
+            final int newWidth = args.getInt(2);
+            final int newHeight = args.getInt(3);
+            final boolean keepScale = args.getBoolean(4);
 
-                super.cordova.getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            //TODO: Validate if image exists
-                            //TODO: Image quality
-                            Bitmap image = BitmapFactory.decodeFile(sourceUri);
+            super.cordova.getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        //TODO: Validate if image exists
+                        //TODO: Image quality
+                        Bitmap image = BitmapFactory.decodeFile(sourceUri);
 
-                            Bitmap newImage = resize(image, newWidth, newHeight, keepScale);
+                        Bitmap newImage = resize(image, newWidth, newHeight, keepScale);
 
-                            saveImage(newImage, destinationUri);
+                        saveImage(newImage, destinationUri);
 
-                        } catch (JSONException e) {
-                            callbackContext.error(e.getMessage());
+                    } catch (JSONException e) {
+                        callbackContext.error(e.getMessage());
 
-                        } catch (IOException e) {
-                            callbackContext.error(e.getMessage());
-                        }
+                    } catch (IOException e) {
+                        callbackContext.error(e.getMessage());
                     }
-                });
+                }
+            });
 
-                return true;
-            case "rotate":
-                final String sourceUri = (String) args.get(0);
-                final String destinationUri = (String) args.get(1);
-                final int angle = args.getInt(2);
-
-                super.cordova.getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            //TODO: Validate if image exists
-                            //TODO: Image quality
-                            Bitmap image = BitmapFactory.decodeFile(cordova.getActivity().getFilesDir().getAbsolutePath() + "/" + sourceUri);
-
-
-                            Bitmap newImage = rotate(image, angle);
-
-                            saveImage(newImage, cordova.getActivity().getFilesDir().getAbsolutePath() + "/" + destinationUri);
-
-                        } catch (Exception e) {
-                            callbackContext.error(e.getMessage());
-                        }
-                    }
-                });
-
-                return true;
-            case "crop":
-                final String sourceUri = (String) args.get(0);
-                final String destinationUri = (String) args.get(1);
-                final JSONArray matrixArray = args.getJSONArray(2);
-                final int x = matrixArray.getInt(0);
-                final int y = matrixArray.getInt(1);
-                final int width = matrixArray.getInt(2);
-                final int height = matrixArray.getInt(3);
-
-                super.cordova.getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            //TODO: Validate if image exists
-                            //TODO: Image quality
-                            Bitmap image = BitmapFactory.decodeFile(cordova.getActivity().getFilesDir().getAbsolutePath() + "/" + sourceUri);
-
-                            Bitmap newImage = crop(image, x, y, width, height);
-
-                            saveImage(newImage, cordova.getActivity().getFilesDir().getAbsolutePath() + "/" + destinationUri);
-
-                        } catch (Exception e) {
-                            callbackContext.error(e.getMessage());
-                        }
-                    }
-                });
-                return true;
-            default:
-                callbackContext.success();
-                return true;
+            return true;
         }
+
+        if (action.equals("rotate")) {
+
+            final String sourceUri = (String) args.get(0);
+            final String destinationUri = (String) args.get(1);
+            final int angle = args.getInt(2);
+
+            super.cordova.getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        //TODO: Validate if image exists
+                        //TODO: Image quality
+                        String path = cordova.getActivity().getFilesDir().getAbsolutePath();
+                        Log.d(LOG_TAG, path + "/" + sourceUri);
+                        Bitmap image = BitmapFactory.decodeFile(path + "/" + sourceUri);
+//                        Bitmap image = BitmapFactory.decodeFile(sourceUri);
+
+                        Bitmap newImage = rotate(image, angle);
+                        Log.d(LOG_TAG, path + "/" + destinationUri);
+                        saveImage(newImage, path + "/" + destinationUri);
+//                        saveImage(newImage, destinationUri);
+
+                    } catch (Exception e) {
+                        Log.d(LOG_TAG, e.getMessage());
+                        callbackContext.error(e.getMessage());
+                    }
+                }
+            });
+
+            return true;
+        }
+        if (action.equals("crop")) {
+            final String sourceUri = (String) args.get(0);
+            final String destinationUri = (String) args.get(1);
+            final JSONArray matrixArray = args.getJSONArray(2);
+            final int x = matrixArray.getInt(0);
+            final int y = matrixArray.getInt(1);
+            final int width = matrixArray.getInt(2);
+            final int height = matrixArray.getInt(3);
+
+            super.cordova.getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        //TODO: Validate if image exists
+                        //TODO: Image quality
+                        Bitmap image = BitmapFactory.decodeFile(cordova.getActivity().getFilesDir().getAbsolutePath() + "/" + sourceUri);
+
+                        Bitmap newImage = crop(image, x, y, width, height);
+
+                        saveImage(newImage, cordova.getActivity().getFilesDir().getAbsolutePath() + "/" + destinationUri);
+
+                    } catch (Exception e) {
+                        callbackContext.error(e.getMessage());
+                    }
+                }
+            });
+            return true;
+        }
+
+        callbackContext.success();
+        return true;
+
     }
+}

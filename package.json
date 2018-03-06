@@ -1,6 +1,6 @@
 {
   "name": "cordova-plugin-image-processing",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "Simple image processing for Cordova/Ionic",
   "main": "index.js",
   "repository": {
